@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  db:
+    image: docker.io/library/mysql:5.7
+    container_name: wordpress_db
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: your_root_password
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_password
+
+  wordpress:
+    image: docker.io/library/wordpress:latest
+    container_name: wordpress_app
+    volumes:
+      - wp_data:/var/www/html
+    ports:
+      - "7070:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - db
+
+# as you say Create Network such as "docker network create <network_name>"   
+networks:
+  # defaults لو مش موجوده هتتوجد بال 
+  LAN: {}
+volumes:
+  db_data:
+  wp_data:
